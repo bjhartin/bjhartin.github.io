@@ -1,1 +1,133 @@
-<html><body><p>Hi</p></body></html>
+<html>
+<head>
+    <link href="lib/mathquill.css" rel="stylesheet">
+    <link href="lib/matheditor.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="lib/mathquill.min.js"></script>
+    <script src="lib/html2canvas.min.js"></script>
+    <script src="lib/matheditor.js"></script>
+    <script type="text/javascript">
+        var steps = 1;
+
+        function answerDiv() {
+            return document.getElementById('answers');
+        }
+
+        function problemNumber() {
+            return document.getElementById("problemNumber").value;
+        }
+
+        function screenshot() {
+            html2canvas(document.body).then(function (canvas) {
+                var screenShotName = 'RSM-Problem';
+                console.info(problemNumber());
+                if(problemNumber().length != 0) {
+                  screenShotName = screenShotName + '-' + problemNumber();
+                }
+                saveAs(canvas.toDataURL(), screenShotName + '.png');
+            });
+        }
+
+        function saveAs(uri, filename) {
+
+            var link = document.createElement('a');
+
+            if (typeof link.download === 'string') {
+
+                link.href = uri;
+                link.download = filename;
+
+                //Firefox requires the link to be in the body
+                document.body.appendChild(link);
+
+                //simulate click
+                link.click();
+
+                //remove the link when done
+                document.body.removeChild(link);
+
+            } else {
+
+                window.open(uri);
+
+            }
+        }
+
+        function enableEquation(id, lastContent) {
+            var element = document.getElementById(id);
+            element.editor = new MathEditor(id);
+            element.editor.setTemplate('floating-toolbar');
+            element.editor.setLatex(lastContent);
+        }
+
+        function answerId(step) {
+            return 'answer' + step;
+        }
+
+        function answerElement(step) {
+            return document.getElementById(answerId(step));
+        }
+
+        function getLatex(step) {
+            return answerElement(step).editor.answerMathField.latex();
+        }
+
+        function addEquation() {
+            var latex = getLatex(steps);
+            steps = steps + 1;
+            var newId = answerId(steps);
+            var div = answerDiv();
+            var span = document.createElement("span");
+            div.appendChild(span);
+            span.id = newId;
+            enableEquation(newId, latex);
+        }
+
+        function removeLastEquation() {
+            if(steps > 1) {
+                id = answerId(steps);
+                var element = document.getElementById(id);
+                element.remove();
+                steps = steps - 1;
+            }
+        }
+    </script>
+</head>
+<body id='body' style="background:#F6F4F4;overflow:hidden">
+<div id="capture">
+    <p>Homework Steps for problem: <input id="problemNumber" type="text" style="width:50px;"/></p>
+    <p>Keyboard shortcuts:</p>
+    <ul>
+        <li>
+            Esc - Show/hide equation toolbar
+        </li>
+        <li>
+            Control Alt '+' - Add new equation (copies last equation)
+        </li>
+        <li>
+            Control Alt '-' - Remove last equation
+        </li>
+        <li>
+            Control Alt 's' - save as image (uses problem number for saved file name)
+        </li>
+    </ul>
+    <p><i>Attention teachers: This app is only an accessibility / input assistance tool.<br/>
+        It does not perform any calculations or help solve problems.<br/>
+        It makes it easier for some students to show their work in steps.</i></p>
+    <div id="answers">
+        <span id="answer1"></span>
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <input type="button" onclick="addEquation();" value="Add Step"/>
+    <input type="button" onclick="screenshot();" value="Save as .png file"/>
+    <input type="button" onclick="removeLastEquation();" value="Remove Last Step"/>
+</div>
+</body>
+
+<script type="text/javascript">
+    enableEquation('answer1', "");
+</script>
+
+</html>
