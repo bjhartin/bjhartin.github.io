@@ -18,97 +18,9 @@
     <!-- For saving the screen -->
     <script src="lib/html2canvas.js"></script>
     <script src="lib/html2pdf.bundle.min.js"></script>
-    <script type="text/javascript">
-        var steps = 1;
-
-        function answerDiv() {
-            return document.getElementById('answers');
-        }
-
-        function problemNumber() {
-            return document.getElementById("problemNumber").value;
-        }
-
-        function screenshot() {
-            html2canvas(document.body).then(function (canvas) {
-                var screenShotName = 'RSM-Problem';
-                console.info(problemNumber());
-                if(problemNumber().length != 0) {
-                  screenShotName = screenShotName + '-' + problemNumber();
-                }
-                saveAs(canvas.toDataURL(), screenShotName + '.png');
-            });
-        }
-
-        function saveAs(uri, filename) {
-
-            var link = document.createElement('a');
-
-            if (typeof link.download === 'string') {
-
-                link.href = uri;
-                link.download = filename;
-
-                //Firefox requires the link to be in the body
-                document.body.appendChild(link);
-
-                //simulate click
-                link.click();
-
-                //remove the link when done
-                document.body.removeChild(link);
-
-            } else {
-
-                window.open(uri);
-
-            }
-        }
-
-        function enableEquation(id, lastContent) {
-            var element = document.getElementById(id);
-            element.editor = new MathEditor(id);
-            element.editor.setTemplate('floating-toolbar');
-            element.editor.setLatex(lastContent);
-        }
-
-        function answerId(step) {
-            return 'answer' + step;
-        }
-
-        function answerElement(step) {
-            return document.getElementById(answerId(step));
-        }
-
-        function getLatex(step) {
-            return answerElement(step).editor.answerMathField.latex();
-        }
-
-        function addEquation() {
-            var latex = getLatex(steps);
-            steps = steps + 1;
-            var newId = answerId(steps);
-            var div = answerDiv();
-            var span = document.createElement("span");
-            div.appendChild(span);
-            span.id = newId;
-            enableEquation(newId, latex);
-        }
-
-        function removeLastEquation() {
-            if(steps > 1) {
-                id = answerId(steps);
-                var element = document.getElementById(id);
-                element.remove();
-                steps = steps - 1;
-            }
-        }
-
-
-
-
-
-    </script>
+    <!-- Overriding CSS tyles -->
+    <link hred="lib/overrides.css" rel="stylesheet">
+    <script src="lib/steps.js"></script>
 </head>
 <body class="w3-theme-l5">
 <!-- Navbar -->
@@ -135,25 +47,25 @@
         <!-- Left Column -->
         <div class="w3-col m3">
             <!-- Accordion -->
-            <div class="w3-card w3-round">
-                <div class="w3-white">
-                    <button onclick="myFunction('Demo1')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i
-                            class="fa fa-circle-o-notch fa-fw w3-margin-right"></i> Add Problem
-                    </button>
-                    <div id="Demo1" class="w3-hide w3-container">
-                        <p>Some text..</p>
-                    </div>
-                    <button onclick="myFunction('Demo2')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i
-                            class="fa fa-calendar-check-o fa-fw w3-margin-right"></i> My Assignments
-                    </button>
-                    <div id="Demo2" class="w3-hide w3-container">
-                        <p>Some other text..</p>
-                    </div>
-                    <button onclick="myFunction('Demo3')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i
-                            class="fa fa-users fa-fw w3-margin-right"></i> My Class
-                    </button>
-                </div>
-            </div>
+<!--            <div class="w3-card w3-round">-->
+<!--                <div class="w3-white">-->
+<!--                    <button onclick="myFunction('Demo1')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i-->
+<!--                            class="fa fa-circle-o-notch fa-fw w3-margin-right"></i> Add Problem-->
+<!--                    </button>-->
+<!--                    <div id="Demo1" class="w3-hide w3-container">-->
+<!--                        <p>Some text..</p>-->
+<!--                    </div>-->
+<!--                    <button onclick="myFunction('Demo2')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i-->
+<!--                            class="fa fa-calendar-check-o fa-fw w3-margin-right"></i> My Assignments-->
+<!--                    </button>-->
+<!--                    <div id="Demo2" class="w3-hide w3-container">-->
+<!--                        <p>Some other text..</p>-->
+<!--                    </div>-->
+<!--                    <button onclick="myFunction('Demo3')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i-->
+<!--                            class="fa fa-users fa-fw w3-margin-right"></i> My Class-->
+<!--                    </button>-->
+<!--                </div>-->
+<!--            </div>-->
             <br>
 
 
@@ -163,8 +75,7 @@
           <i class="fa fa-remove"></i>
         </span>
                 <p><strong>Hi Teachers!</strong></p>
-                <p>I built this tool for my kids to help them solve problems step-by-step.  It doesn't do any math for them.</p>
-                <p>(I didn't build it from <i>scratch</i></p>
+                <p>I built this page for my kids to help them solve problems step-by-step.  It doesn't do any math for them.</p>
             </div>
         </div>
         <div class="w3-col m7">
