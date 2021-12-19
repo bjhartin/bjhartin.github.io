@@ -28,6 +28,7 @@
 }
 div[class^="matheditor-wrapper-"]{
     /*margin: auto;*/
+    margin-bottom: 10px;
 }
 div[class^="matheditor-toolbar-"]{
     margin-bottom: 3px;
